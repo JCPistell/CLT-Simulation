@@ -13,7 +13,7 @@ Many people are very confused by the Central Limit Theorem (or CLT) when they fi
 
 I personally find visualization to be very helpful when learning something and I think visualizing the CLT can be particularly helpful. To do this, we need to create a simulation. We definitely want to do this with a computer because a computer can run thousands of trials in a matter of moments and do all the heavy maths for us. We'll use R to program the simulation and R's ggplot package to visualize the results. I'll show all the code I'm using so you can follow along and I'll make it available on github [here.](https://github.com/JCPistell/CLT-Simulation) I encourage you to grab it and play with it yourself!
 
-###Defining the Population
+###Defining the Population:
 
 First thing's first: We need to make sure our R session is configured correctly and set our random number seed so our results are reproducible.
 
@@ -48,7 +48,7 @@ hg
 
 Excellent. Note that we've calculated our population mean $\mu = `r round(mu, 2)`$ and our standard deviation $\sigma = `r round(sigma, 2)`$. We'll be referring back to these later.
 
-###The Simulation
+###The Simulation:
 
 Time to run the simulation. In order to really see what's going on with the CLT we're going to run this simulation a bunch of times with different values for 'n' (how many samples we take) and 't' (how many trials we run). We'll store all this data in a table so we can then visualize it. Note that this is almost certainly not the most efficient way of coding this simulation, but I think it makes it pretty easy to understand how it all works.
 
