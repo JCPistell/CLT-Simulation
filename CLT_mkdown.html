@@ -67,9 +67,9 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <div id="defining-the-population" class="section level3">
 <h3>Defining the Population:</h3>
 <p>First thing’s first: We need to make sure our R session is configured correctly and set our random number seed so our results are reproducible.</p>
-<pre class="r"><code>require(ggplot2)</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<pre class="r"><code>set.seed(7759)</code></pre>
+<pre class="r"><code>require(ggplot2)
+require(knitr)
+set.seed(7759)</code></pre>
 <p>Now we need to create our population. Note that in the “real world” we’ll never have perfect knowledge of the population we’re studying, but it’ll be a huge help here because we can use it to see how well the CLT works.</p>
 <p>It’s important to realize that the CLT will work for ANY population distribution, no matter how wacky it is. To show this, let’s test it against a pretty weird population. Here’s how we’ll create it:</p>
 <pre class="r"><code># Create a non-uniform population of 100,000 numbers between 1 and 100
@@ -180,35 +180,166 @@ sdf &lt;- as.data.frame(m, row.names = c(&quot;t10&quot;, &quot;t100&quot;, &quo
 names(sdf) &lt;- c(&quot;s1&quot;, &quot;s5&quot;, &quot;s10&quot;, &quot;s30&quot;, &quot;s50&quot;, &quot;s100&quot;)
 sdf &lt;- t(sdf) #transposed to match our graph better
 rm(m) #clean up
-sdf</code></pre>
-<pre><code>##            t10      t100     t1000    t10000
-## s1   30.488919 25.462874 26.776761 25.453176
-## s5   12.390729 11.109437 11.285796 11.520970
-## s10   6.963056  8.270600  8.286171  8.182902
-## s30   4.087005  4.313087  4.661867  4.676186
-## s50   4.252869  3.806862  3.745439  3.592716
-## s100  2.275072  2.734845  2.585293  2.573638</code></pre>
+kable(sdf)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">t10</th>
+<th align="right">t100</th>
+<th align="right">t1000</th>
+<th align="right">t10000</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">s1</td>
+<td align="right">30.488919</td>
+<td align="right">25.462874</td>
+<td align="right">26.776761</td>
+<td align="right">25.453177</td>
+</tr>
+<tr class="even">
+<td align="left">s5</td>
+<td align="right">12.390729</td>
+<td align="right">11.109437</td>
+<td align="right">11.285796</td>
+<td align="right">11.520970</td>
+</tr>
+<tr class="odd">
+<td align="left">s10</td>
+<td align="right">6.963056</td>
+<td align="right">8.270599</td>
+<td align="right">8.286171</td>
+<td align="right">8.182902</td>
+</tr>
+<tr class="even">
+<td align="left">s30</td>
+<td align="right">4.087005</td>
+<td align="right">4.313087</td>
+<td align="right">4.661867</td>
+<td align="right">4.676186</td>
+</tr>
+<tr class="odd">
+<td align="left">s50</td>
+<td align="right">4.252869</td>
+<td align="right">3.806862</td>
+<td align="right">3.745439</td>
+<td align="right">3.592716</td>
+</tr>
+<tr class="even">
+<td align="left">s100</td>
+<td align="right">2.275072</td>
+<td align="right">2.734845</td>
+<td align="right">2.585293</td>
+<td align="right">2.573638</td>
+</tr>
+</tbody>
+</table>
 <p>Now let’s calculate what the CLT tells us these values should be for each value of ‘n’. We’re using the standard error formula:</p>
 <p><span class="math">\[
 se = \frac{\sigma}{\sqrt{n}}
 \]</span></p>
 <pre class="r"><code># Calculate our expected standard error from the population standard deviation
-exvals &lt;-  sigma/sqrt(c(1, 5, 10, 30, 50, 100))
-exvals</code></pre>
-<pre><code>## [1] 25.653426 11.472561  8.112326  4.683653  3.627942  2.565343</code></pre>
-<p>Just eyeballing it, it looks like they’re pretty close. A quick note here: our ‘se’ calculations are arranged horizontally, but we want to compare them to each of the respective columns above. That’s a bit confusing, so we’ll fix it in the next section. Let’s calculate the ratios of our observed values over the calculated standard error. Realize that the closer the two values are, the closer <span class="math">\(\frac{obs}{se}\)</span> will be to 1.</p>
+exvals &lt;- sigma/sqrt(c(1, 5, 10, 30, 50, 100))
+dfex &lt;- as.data.frame(exvals, row.names = c(&quot;s1&quot;, &quot;s5&quot;, &quot;s10&quot;, &quot;s30&quot;, &quot;s50&quot;, &quot;s100&quot;))
+names(dfex) &lt;- &quot;Predicted Standard Deviations&quot;
+kable(dfex)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Predicted Standard Deviations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">s1</td>
+<td align="right">25.653426</td>
+</tr>
+<tr class="even">
+<td align="left">s5</td>
+<td align="right">11.472561</td>
+</tr>
+<tr class="odd">
+<td align="left">s10</td>
+<td align="right">8.112326</td>
+</tr>
+<tr class="even">
+<td align="left">s30</td>
+<td align="right">4.683653</td>
+</tr>
+<tr class="odd">
+<td align="left">s50</td>
+<td align="right">3.627942</td>
+</tr>
+<tr class="even">
+<td align="left">s100</td>
+<td align="right">2.565343</td>
+</tr>
+</tbody>
+</table>
+<p>Just eyeballing it, it looks like they’re pretty close. Let’s calculate the ratios of our observed values over the calculated standard error. Realize that the closer the two values are, the closer <span class="math">\(\frac{obs}{se}\)</span> will be to 1.</p>
 <pre class="r"><code># Express how close we are as percentages.
 pexval &lt;- sdf/exvals</code></pre>
 <p>Finally, we’ll subtract 1 from these values to calculate the distance each observation is from the calculated standard error and round the results to 3 decimal places to make it easier to read and interpret. If <span class="math">\(\frac{obs}{se} - 1 \approx 0\)</span> then the simulation has provided evidence that the standard error calculation is valid.</p>
 <pre class="r"><code># Subtract 1 to show distance from ideal and round to 3 decimals to make it readable
-round(pexval - 1, 3)</code></pre>
-<pre><code>##         t10   t100  t1000 t10000
-## s1    0.188 -0.007  0.044 -0.008
-## s5    0.080 -0.032 -0.016  0.004
-## s10  -0.142  0.020  0.021  0.009
-## s30  -0.127 -0.079 -0.005 -0.002
-## s50   0.172  0.049  0.032 -0.010
-## s100 -0.113  0.066  0.008  0.003</code></pre>
+kable(round(pexval - 1, 3))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">t10</th>
+<th align="right">t100</th>
+<th align="right">t1000</th>
+<th align="right">t10000</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">s1</td>
+<td align="right">0.188</td>
+<td align="right">-0.007</td>
+<td align="right">0.044</td>
+<td align="right">-0.008</td>
+</tr>
+<tr class="even">
+<td align="left">s5</td>
+<td align="right">0.080</td>
+<td align="right">-0.032</td>
+<td align="right">-0.016</td>
+<td align="right">0.004</td>
+</tr>
+<tr class="odd">
+<td align="left">s10</td>
+<td align="right">-0.142</td>
+<td align="right">0.020</td>
+<td align="right">0.021</td>
+<td align="right">0.009</td>
+</tr>
+<tr class="even">
+<td align="left">s30</td>
+<td align="right">-0.127</td>
+<td align="right">-0.079</td>
+<td align="right">-0.005</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">s50</td>
+<td align="right">0.172</td>
+<td align="right">0.049</td>
+<td align="right">0.032</td>
+<td align="right">-0.010</td>
+</tr>
+<tr class="even">
+<td align="left">s100</td>
+<td align="right">-0.113</td>
+<td align="right">0.066</td>
+<td align="right">0.008</td>
+<td align="right">0.003</td>
+</tr>
+</tbody>
+</table>
 <p>Once ‘t’ gets high enough, the values get very close to the CLT’s standard error calculation. We can see from this that if we ran a simulation with an extremely high ‘t’ value we’d get even closer.</p>
 </div>
 <div id="conclusions" class="section level3">

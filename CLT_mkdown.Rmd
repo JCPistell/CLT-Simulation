@@ -2,7 +2,9 @@
 title: "Understanding the Central Limit Theorem With Simulation"
 author: "Colin Pistell"
 date: "Friday, November 14, 2014"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ###Introduction:
@@ -17,8 +19,9 @@ I personally find visualization to be very helpful when learning something and I
 
 First thing's first: We need to make sure our R session is configured correctly and set our random number seed so our results are reproducible.
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 require(ggplot2)
+require(knitr)
 set.seed(7759)
 ```
 
@@ -87,7 +90,7 @@ head(df, n = 25) #the full table is too big to look at but we can take a peek at
 
 Looking at the resulting data frame (which we've named 'df') isn't very exciting. But, now let's visualize the results and see what we can see:
 
-```{r graph 1, fig.width=9, fig.height=7}
+```{r, fig.width=9, fig.height=7}
 # We tidy up our data frame to get it ready for graphing. Note that we built it in "tall"
 # form so it's already structured for ggplot
 
@@ -120,7 +123,7 @@ sdf <- as.data.frame(m, row.names = c("t10", "t100", "t1000", "t10000"))
 names(sdf) <- c("s1", "s5", "s10", "s30", "s50", "s100")
 sdf <- t(sdf) #transposed to match our graph better
 rm(m) #clean up
-sdf
+kable(sdf)
 ```
 
 Now let's calculate what the CLT tells us these values should be for each value of 'n'. We're using the standard error formula:
@@ -131,11 +134,13 @@ $$
 
 ```{r}
 # Calculate our expected standard error from the population standard deviation
-exvals <-  sigma/sqrt(c(1, 5, 10, 30, 50, 100))
-exvals
+exvals <- sigma/sqrt(c(1, 5, 10, 30, 50, 100))
+dfex <- as.data.frame(exvals, row.names = c("s1", "s5", "s10", "s30", "s50", "s100"))
+names(dfex) <- "Predicted Standard Deviations"
+kable(dfex)
 ```
 
-Just eyeballing it, it looks like they're pretty close. A quick note here: our 'se' calculations are arranged horizontally, but we want to compare them to each of the respective columns above. That's a bit confusing, so we'll fix it in the next section. Let's calculate the ratios of our observed values over the calculated standard error. Realize that the closer the two values are, the closer $\frac{obs}{se}$ will be to 1. 
+Just eyeballing it, it looks like they're pretty close. Let's calculate the ratios of our observed values over the calculated standard error. Realize that the closer the two values are, the closer $\frac{obs}{se}$ will be to 1. 
 
 ```{r}
 # Express how close we are as percentages.
@@ -147,7 +152,7 @@ Finally, we'll subtract 1 from these values to calculate the distance each obser
 
 ```{r}
 # Subtract 1 to show distance from ideal and round to 3 decimals to make it readable
-round(pexval - 1, 3)
+kable(round(pexval - 1, 3))
 ```
 
 Once 't' gets high enough, the values get very close to the CLT's standard error calculation. We can see from this that if we ran a simulation with an extremely high 't' value we'd get even closer.
