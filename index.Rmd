@@ -3,8 +3,10 @@ title: "Understanding the Central Limit Theorem With Simulation"
 author: "Colin Pistell"
 date: "Friday, November 14, 2014"
 output:
-  pdf_document: default
-  html_document: default
+  html_document:
+        toc: true
+        theme: "cosmo"
+        highlight: "pygments"
 ---
 
 ###Introduction:
@@ -53,7 +55,7 @@ Excellent. Note that we've calculated our population mean $\mu = `r round(mu, 2)
 
 ###The Simulation:
 
-Time to run the simulation. In order to really see what's going on with the CLT we're going to run this simulation a bunch of times with different values for 'n' (how many samples we take) and 't' (how many trials we run). We'll store all this data in a table so we can then visualize it. Note that this is almost certainly not the most efficient way of coding this simulation, but I think it makes it pretty easy to understand how it all works.
+Time to run the simulation. In order to really see what's going on with the CLT we're going to run this simulation a bunch of times with different values for 'n' (how many samples we take) and 't' (how many trials we run). We'll store all this data in a table so we can then visualize it. Note that this is most certainly not the most efficient way of coding this simulation, but I think it makes it pretty easy to understand how it all works.
 
 ```{r}
 n <- c(1, 5, 10, 30, 50, 100) #set up number of samples
